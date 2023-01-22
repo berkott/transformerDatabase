@@ -1,0 +1,8 @@
+FROM ghcr.io/pytorch/pytorch-nightly:5837a66-cu11.6.2
+
+# TODO: get correct version of libs below or make requirements file and do pip intall from that file
+RUN pip install transformers
+RUN pip install datasets
+RUN pip install tiktoken
+RUN pip install wandb
+RUN pip install tqdm

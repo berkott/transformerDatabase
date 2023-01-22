@@ -1,0 +1,18 @@
+FROM ghcr.io/pytorch/pytorch-nightly:5837a66-cu11.6.2
+
+# TODO: get correct version of libs below or make requirements file and do pip intall from that file
+RUN pip install transformers
+RUN pip install datasets
+RUN pip install tiktoken
+# RUN mkdir /project
+# RUN cd /project
+# RUN git clone https://github.com/berkott/transformerDatabase
+COPY . /project
+RUN cd /project/data/shakespeare/ && \
+    python prepare.py && \
+    chmod +x /project/run.sh
+CMD ["/project/run.sh"]
+# COPY run.sh /project/run.sh
+# CMD ["/project/run.sh"]
+
+# docker run -v /home/berkan/code/general/transformerDatabase:/project -ti pytorch-berkan /bin/bash
