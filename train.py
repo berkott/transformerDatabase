@@ -45,28 +45,25 @@ wandb_project = 'transformerDatabase'
 wandb_entity = 'berkott'
 wandb_run_name = 'run' + str(time.time())
 # data
-dataset = 'shakespeare'
+dataset = 'openwebtext'
 gradient_accumulation_steps = 1 # used to simulate larger batch sizes
 batch_size = 12 # if gradient_accumulation_steps > 1, this is the micro-batch size
 block_size = 1024
 # model
-n_layer = 4
-n_head = 4
-n_embd = 64
-# n_layer = 11
-# n_head = 12
-# n_embd = 768
+n_layer = 12
+n_head = 12
+n_embd = 768
 dropout = 0.0 # for pretraining 0 is good, for finetuning try 0.1+
 # adamw optimizer
 learning_rate = 6e-4 # max learning rate
-max_iters = 100000 # total number of training iterations
+max_iters = 600000 # total number of training iterations
 weight_decay = 1e-2
 beta1 = 0.9
 beta2 = 0.95
 # learning rate decay settings
 decay_lr = True # whether to decay the learning rate
 warmup_iters = 2000 # how many steps to warm up for
-lr_decay_iters = 100000 # should be ~= max_iters per Chinchilla
+lr_decay_iters = 600000 # should be ~= max_iters per Chinchilla
 min_lr = 6e-5 # minimum learning rate, should be ~= learning_rate/10 per Chinchilla
 # DDP settings
 backend = 'nccl' # 'nccl', 'gloo', etc.

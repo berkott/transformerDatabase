@@ -2,6 +2,20 @@ Run Shit: ssh -i ~/.ssh/transformerDatabaseKey.pem ubuntu@129.213.19.95
 
 sudo docker pull ghcr.io/pytorch/pytorch-nightly
 
+sudo docker build . -f Dockerfile.simple -t pytorch-2
+
+sudo docker images
+
+sudo docker run -v /home/berk/code/general/transformerDatabase:/project --gpus all -ti pytorch-2-1 /bin/bash
+
+pip list --format=freeze > requirements.txt
+
+One wandb option: https://docs.wandb.ai/quickstart and then port this over to docker container as follows: https://docs.wandb.ai/ref/cli/wandb-docker-run
+
+To login: gh auth login
+
+python train.py config/train_wikipedia_small.py
+
 # nanoGPT
 
 ![nanoGPT](assets/nanogpt.jpg)

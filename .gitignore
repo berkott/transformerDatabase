@@ -1,3 +1,4 @@
 wandb/
 *.bin
 __pycache__/
+*.pt
