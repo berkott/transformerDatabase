@@ -12,6 +12,15 @@ pip list --format=freeze > requirements.txt
 
 One wandb option: https://docs.wandb.ai/quickstart and then port this over to docker container as follows: https://docs.wandb.ai/ref/cli/wandb-docker-run
 
+DON'T INSTALL GH USING SNAP, IT IS TOTAL ASS
+type -p curl >/dev/null || sudo apt install curl -y
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+&& sudo apt update \
+&& sudo apt install gh -y
+
+
 To login: gh auth login
 
 python train.py config/train_wikipedia_small.py
