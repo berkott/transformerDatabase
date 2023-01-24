@@ -7,24 +7,16 @@ import numpy as np
 import tiktoken
 from datasets import load_dataset # huggingface datasets
 
-DATASET_SIZE = "small" # small or large
-
 # number of workers in .map() call
 # good number to use is ~order number of cpu cores // 2
 num_proc = 8
 
 # takes 54GB in huggingface .cache dir, about 8M documents (8,013,769)
-if DATASET_SIZE == "large":
-    dataset = load_dataset("wikipedia", "20220301.en") # total 40GB
-else:
-    dataset = load_dataset("wikipedia", "20220301.simple") # total 475MB
+dataset = load_dataset("wikipedia", "20220301.simple") # total 475MB
 # dataset = load_dataset("openwebtext")
 
 # owt by default only contains the 'train' split, so create a test split
-if DATASET_SIZE == "large":
-    split_dataset = dataset["train"].train_test_split(test_size=0.0005, seed=2357, shuffle=True)
-else:
-    split_dataset = dataset["train"].train_test_split(test_size=0.02, seed=2357, shuffle=True)
+split_dataset = dataset["train"].train_test_split(test_size=0.02, seed=2357, shuffle=True)
 split_dataset['val'] = split_dataset.pop('test') # rename the test split to val
 
 # for DATASET_SIZE = "small", this results in:
