@@ -27,7 +27,8 @@ import torch
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.distributed import init_process_group, destroy_process_group
 
-from model import GPTConfig, GPT
+from models.transformer import GPTConfig, GPT
+from models.mlpMixer import MLPMixerConfig, MLPMixer
 
 # -----------------------------------------------------------------------------
 # default config values designed to train a gpt2 (124M) on OpenWebText
@@ -50,6 +51,7 @@ gradient_accumulation_steps = 1 # used to simulate larger batch sizes
 batch_size = 12 # if gradient_accumulation_steps > 1, this is the micro-batch size
 block_size = 1024
 # model
+model_type = "mlpMixer" # 'transformer' or 'mlpMixer'
 n_layer = 12
 n_head = 12
 n_embd = 768
@@ -133,8 +135,14 @@ model_args = dict(n_layer = n_layer, n_head = n_head, n_embd = n_embd, block_siz
 if init_from == 'scratch':
     # init a new model from scratch
     print("Initializing a new model from scratch")
-    gptconf = GPTConfig(**model_args)
-    model = GPT(gptconf)
+    if model_type == 'transformer':
+        model_conf = GPTConfig(**model_args)
+        model = GPT(model_conf)
+    elif model_type == 'mlpMixer':
+        model_conf = MLPMixerConfig(**model_args)
+        model = MLPMixer(model_conf)
+
+# TODO: Add support for MLP-Mixer here
 elif init_from == 'resume':
     print(f"Resuming training from {out_dir}")
     # resume training from a checkpoint.
@@ -144,8 +152,8 @@ elif init_from == 'resume':
     for k, v in model_args.items():
         assert checkpoint_model_args[k] == v, "for now"
         # TODO: think through how passed in params should interact with checkpoint params
-    gptconf = GPTConfig(**model_args)
-    model = GPT(gptconf)
+    model_conf = GPTConfig(**model_args)
+    model = GPT(model_conf)
     state_dict = checkpoint['model']
     # fix the keys of the state dictionary :(
     # honestly no idea how checkpoints sometimes get this prefix, have to debug more
@@ -156,6 +164,8 @@ elif init_from == 'resume':
     model.load_state_dict(state_dict)
     iter_num = checkpoint['iter_num']
     best_val_loss = checkpoint['best_val_loss']
+
+# TODO: Add support for MLP-Mixer here
 elif init_from.startswith('gpt2'):
     print(f"Initializing from OpenAI GPT-2 weights: {init_from}")
     # initialize from OpenAI GPT-2 weights
